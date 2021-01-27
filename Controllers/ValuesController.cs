@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace TraceabilityWebApi.Controllers
 {
+    [Route("api/[controller]")]
     public class ValuesController : ApiController
     {
         // GET api/values

@@ -23,10 +23,10 @@ namespace TraceabilityWebApi.Controllers
             conn = new SqlConnection(conString);
         }
 
-        public IEnumerable<StorageCarts> StorageCartValue()
+        public IEnumerable<Przedza> StorageCartValue()
         {
 
-            List<StorageCarts> cartData = new List<StorageCarts>();
+            List<Przedza> cartData = new List<Przedza>();
 
             connection();
             SqlCommand com = new SqlCommand("spStorageCartValues", conn);
@@ -36,10 +36,10 @@ namespace TraceabilityWebApi.Controllers
             SqlDataReader reader = com.ExecuteReader();
             while (reader.Read())
             {
-                StorageCarts storageCart = new StorageCarts();
+                Przedza storageCart = new Przedza();
                 storageCart.Nr_wozka = reader["Nr_wozka"].ToString();
-                storageCart.CoilType = reader["Typ_cewki"].ToString();
-                storageCart.CoilColor = reader["Kolor_cewki"].ToString();
+                storageCart.Typ_cewki = reader["Typ_cewki"].ToString();
+                storageCart.Kolor_cewki = reader["Kolor_cewki"].ToString();
 
                 cartData.Add(storageCart);
             }
@@ -48,207 +48,6 @@ namespace TraceabilityWebApi.Controllers
             return cartData;
         }
 
-        #region Pobieranie listy wózków
-        public IEnumerable<CartsPZ> GetPzCarts()
-        {
-            List<CartsPZ> cartsData = new List<CartsPZ>();
-
-            connection(); 
-
-            SqlCommand com = new SqlCommand("spGetPzCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPZ cart = new CartsPZ();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material= reader["Material"].ToString();
-                cart.Typ_cewki= reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.TS_PZ = reader["TS_PZ"].ToString();
-                cart.PartiaString = reader["Koniec_Partii"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<CartsPZ> GetPrzedCarts()
-        {
-            List<CartsPZ> cartsData = new List<CartsPZ>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetPrzedCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPZ cart = new CartsPZ();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.Typ_cewki = reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.TS_SUSZ1 = reader["TS_SUSZ1"].ToString();
-                cart.Nazwa_maszyny = reader["Suszenie1"].ToString();
-                cart.TS_SUSZ2 = reader["TS_SUSZ2"].ToString();
-                cart.Nazwa_maszyny2 = reader["Suszenie2"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<CartsPZ> GetPoCarts()
-        {
-            List<CartsPZ> cartsData = new List<CartsPZ>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetPoCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPZ cart = new CartsPZ();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.Typ_cewki = reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.Wilgotnosc = reader["Wilgotnosc_1"].ToString();
-                cart.Wilgotnosc2 = reader["Wilgotnosc_2"].ToString();
-                cart.TS_KOM1 = reader["TS_KOM1"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<CartsPZ> GetKomCarts()
-        {
-            List<CartsPZ> cartsData = new List<CartsPZ>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetKomCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPZ cart = new CartsPZ();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.Typ_cewki = reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<CartsPW> GetPwCarts()
-        {
-            List<CartsPW> cartsData = new List<CartsPW>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetPwCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPW cart = new CartsPW();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.Typ_cewki = reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.Nazwa_maszyny = reader["MaszynaPW1"].ToString();
-                cart.TS_PW1 = reader["TS_PW1"].ToString();
-                cart.TS_PW2 = reader["TS_PW2"].ToString();
-                cart.Nazwa_maszyny2 = reader["MaszynaPW2"].ToString();
-                cart.PartiaString = reader["Koniec_Partii"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<CartsPZ> GetEmptyCarts()
-        {
-            List<CartsPZ> cartsData = new List<CartsPZ>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetEmptyCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                CartsPZ cart = new CartsPZ();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        public IEnumerable<Carts> GetCartInfo(string Nr_wozka)
-        {
-            List<Carts> cartsData = new List<Carts>();
-            Carts cart = new Carts();
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetCartInfo", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                cart.Id_cart = Convert.ToInt32(reader["ID_Wozka"]);
-                cart.Id_machine_PZ = Convert.ToInt32(reader["ID_Maszyny_PZ"]);
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.CoilType = reader["Typ_cewki"].ToString();
-                cart.CoilColor = reader["Kolor_cewki"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-
-        #endregion
 
         #region Podstawowe funkcje aplikacji (śledządze wózki)
         public Response StartTrace(Carts cart)
@@ -623,6 +422,8 @@ namespace TraceabilityWebApi.Controllers
             return response;
         }
 
+
+/* FUSE FUNCTIONS
         public Response FuseOne(Carts cart)
         {
             Response response = new Response();
@@ -1303,6 +1104,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
+*/
 
         #endregion
 

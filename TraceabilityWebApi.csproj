@@ -159,8 +159,12 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\CartsListsController.cs" />
     <Compile Include="Controllers\MastersController.cs" />
+    <Compile Include="Controllers\OldController.cs" />
+    <Compile Include="Controllers\PrzedzaController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\WagaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -168,8 +172,11 @@
     <Compile Include="Models\CartsPW.cs" />
     <Compile Include="Models\CartsPZ.cs" />
     <Compile Include="Models\PickerSelectedItems.cs" />
+    <Compile Include="Models\Przedza.cs" />
     <Compile Include="Models\Response.cs" />
     <Compile Include="Models\StorageCarts.cs" />
+    <Compile Include="Models\Waga.cs" />
+    <Compile Include="Communications\WagaCommunication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +209,9 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="appsettings.json" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <None Include="Properties\PublishProfiles\Local_D-Drive.pubxml" />
     <None Include="Properties\PublishProfiles\SL-DT01.pubxml" />
     <None Include="Properties\PublishProfiles\TraceTEST-SERVER.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -228,6 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Old\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
