@@ -29,7 +29,7 @@ namespace TraceabilityWebApi.Controllers
 
             connection();
 
-            SqlCommand com = new SqlCommand("spGetPzCarts", conn);
+            SqlCommand com = new SqlCommand("sp1GetPzCarts", conn);
 
             com.CommandType = CommandType.StoredProcedure;
             conn.Open();
@@ -39,12 +39,14 @@ namespace TraceabilityWebApi.Controllers
                 Przedza cart = new Przedza();
 
                 cart.Nr_wozka = reader["Nr_wozka"].ToString();
+                cart.Nazwa_maszyny = reader["MaszynaPZ"].ToString();
                 cart.Nm = reader["Nm"].ToString();
                 cart.Material = reader["Material"].ToString();
                 cart.Typ_cewki = reader["Typ_cewki"].ToString();
                 cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
                 cart.TS_PZ = reader["TS_PZ"].ToString();
-                cart.PartiaString = reader["Koniec_Partii"].ToString();
+                cart.Numer_partii= reader["Numer_partii"].ToString();
+                cart.Koniec_partii = reader["Koniec_Partii"].ToString();
 
                 cartsData.Add(cart);
             }
@@ -58,7 +60,7 @@ namespace TraceabilityWebApi.Controllers
 
             connection();
 
-            SqlCommand com = new SqlCommand("spGetPrzedCarts", conn);
+            SqlCommand com = new SqlCommand("sp1GetSuszarniaCarts", conn);
 
             com.CommandType = CommandType.StoredProcedure;
             conn.Open();
@@ -83,13 +85,13 @@ namespace TraceabilityWebApi.Controllers
             return cartsData;
         }
         [HttpGet]
-        public IEnumerable<Przedza> GetPoCarts()
+        public IEnumerable<Przedza> GetKomoraCarts()
         {
             List<Przedza> cartsData = new List<Przedza>();
 
             connection();
 
-            SqlCommand com = new SqlCommand("spGetPoCarts", conn);
+            SqlCommand com = new SqlCommand("sp1GetKomoraCarts", conn);
 
             com.CommandType = CommandType.StoredProcedure;
             conn.Open();
@@ -103,36 +105,9 @@ namespace TraceabilityWebApi.Controllers
                 cart.Material = reader["Material"].ToString();
                 cart.Typ_cewki = reader["Typ_cewki"].ToString();
                 cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.Wilgotnosc_1 = reader["Wilgotnosc_1"].ToString();
-                cart.Wilgotnosc_2 = reader["Wilgotnosc_2"].ToString();
-                cart.TS_Kom_PW = reader["TS_KOM1"].ToString();
-
-                cartsData.Add(cart);
-            }
-            conn.Close();
-            return cartsData;
-        }
-        [HttpGet]
-        public IEnumerable<Przedza> GetKomCarts()
-        {
-            List<Przedza> cartsData = new List<Przedza>();
-
-            connection();
-
-            SqlCommand com = new SqlCommand("spGetKomCarts", conn);
-
-            com.CommandType = CommandType.StoredProcedure;
-            conn.Open();
-            SqlDataReader reader = com.ExecuteReader();
-            while (reader.Read())
-            {
-                Przedza cart = new Przedza();
-
-                cart.Nr_wozka = reader["Nr_wozka"].ToString();
-                cart.Nm = reader["Nm"].ToString();
-                cart.Material = reader["Material"].ToString();
-                cart.Typ_cewki = reader["Typ_cewki"].ToString();
-                cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
+                cart.Numer_partii = reader["Numer_partii"].ToString();
+                cart.Koniec_partii = reader["Koniec_partii"].ToString();
+                cart.TS_KOM1 = reader["TS_KOM1"].ToString();
 
                 cartsData.Add(cart);
             }
@@ -146,7 +121,7 @@ namespace TraceabilityWebApi.Controllers
 
             connection();
 
-            SqlCommand com = new SqlCommand("spGetPwCarts", conn);
+            SqlCommand com = new SqlCommand("sp1GetPwCarts", conn);
 
             com.CommandType = CommandType.StoredProcedure;
             conn.Open();
@@ -156,15 +131,14 @@ namespace TraceabilityWebApi.Controllers
                 Przedza cart = new Przedza();
 
                 cart.Nr_wozka = reader["Nr_wozka"].ToString();
+                cart.Nazwa_maszyny = reader["MaszynaPW1"].ToString();
+                cart.Numer_partii = reader["Numer_partii"].ToString();
                 cart.Nm = reader["Nm"].ToString();
                 cart.Material = reader["Material"].ToString();
                 cart.Typ_cewki = reader["Typ_cewki"].ToString();
                 cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
-                cart.Nazwa_maszyny = reader["MaszynaPW1"].ToString();
-                cart.TS_PW = reader["TS_PW1"].ToString();
-                cart.TS_PW2 = reader["TS_PW2"].ToString();
-                cart.Nazwa_maszyny2 = reader["MaszynaPW2"].ToString();
-                cart.PartiaString = reader["Koniec_Partii"].ToString();
+                cart.TS_PW1 = reader["TS_PW1"].ToString();
+                cart.Koniec_partii = reader["Koniec_Partii"].ToString();
 
                 cartsData.Add(cart);
             }
@@ -178,7 +152,7 @@ namespace TraceabilityWebApi.Controllers
 
             connection();
 
-            SqlCommand com = new SqlCommand("spGetEmptyCarts", conn);
+            SqlCommand com = new SqlCommand("sp1GetEmptyCarts", conn);
 
             com.CommandType = CommandType.StoredProcedure;
             conn.Open();
@@ -194,6 +168,59 @@ namespace TraceabilityWebApi.Controllers
             conn.Close();
             return cartsData;
         }
+        [HttpGet]
+        public IEnumerable<Przedza> GetPwStorageCarts()
+        {
+            List<Przedza> list = new List<Przedza>();
+            connection();
+            SqlCommand command = new SqlCommand("sp1GetPwStorageCarts", this.conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            this.conn.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Przedza item = new Przedza
+                {
+                    Nr_wozka = reader["Nr_wozka"].ToString(),
+                    Typ_cewki = reader["Typ_cewki"].ToString(),
+                    Kolor_cewki = reader["Kolor_cewki"].ToString(),
+                    Nazwa_maszyny = reader["MaszynaPW"].ToString(),
+                    TS_MAG = reader["TS_MAG"].ToString()
+                };
+                list.Add(item);
+            }
+            this.conn.Close();
+            return list;
+        }
+
+        [HttpGet]
+        public IEnumerable<Przedza> GetPzStorageCarts()
+        {
+            List<Przedza> list = new List<Przedza>();
+            connection();
+            SqlCommand command = new SqlCommand("sp1GetPzStorageCarts", this.conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            this.conn.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Przedza item = new Przedza
+                {
+                    Nr_wozka = reader["Nr_wozka"].ToString(),
+                    Typ_cewki = reader["Typ_cewki"].ToString(),
+                    Kolor_cewki = reader["Kolor_cewki"].ToString(),
+                    TS_MAG_PZ = reader["TS_MAG_PZ"].ToString()
+                };
+                list.Add(item);
+            }
+            this.conn.Close();
+            return list;
+        }
+
         [HttpGet]
         public IEnumerable<Carts> GetCartInfo(string Nr_wozka)
         {
@@ -221,5 +248,117 @@ namespace TraceabilityWebApi.Controllers
             conn.Close();
             return cartsData;
         }
+
+        [HttpPut]
+        public Response EditEmptyCart(Przedza przedzaCart)
+        {
+
+            Response response = new Response();
+
+            if (string.IsNullOrEmpty(przedzaCart.Nr_wozka))
+            {
+                response.Message = "Numer wózka jest obowiązkowy";
+                response.Status = 0;
+            }
+            else
+            {
+                connection();
+                SqlCommand command = new SqlCommand("spUpdateNumberEmptyCart", conn);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@Nr_wozka", przedzaCart.Nr_wozka);
+                command.Parameters.AddWithValue("@Nr_wozka2", przedzaCart.Nr_wozka2);
+
+                conn.Open();
+                int i = command.ExecuteNonQuery();
+                conn.Close();
+                if (i >= 1)
+                {
+                    response.Message = "Pomyślnie zmieniono numer wózka";
+                    response.Status = 1;
+                }
+                else
+                {
+                    response.Message = "Nie udało się zmienić nazwy wózka";
+                    response.Status = 0;
+                }
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public Response AddEmptyCart(Przedza przedzaCart)
+        {
+
+            Response response = new Response();
+
+            if (string.IsNullOrEmpty(przedzaCart.Nr_wozka))
+            {
+                response.Message = "Numer wózka jest obowiązkowy";
+                response.Status = 0;
+            }
+            else
+            {
+                connection();
+                SqlCommand command = new SqlCommand("sp1AddNumberEmptyCart", conn);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.AddWithValue("@Nr_wozka", przedzaCart.Nr_wozka);
+
+                conn.Open();
+                int i = command.ExecuteNonQuery();
+                conn.Close();
+                if (i >= 1)
+                {
+                    response.Message = "Pomyślnie zmieniono numer wózka";
+                    response.Status = 1;
+                }
+                else
+                {
+                    response.Message = "Nie udało się zmienić nazwy wózka";
+                    response.Status = 0;
+                }
+            }
+            return response;
+        }
+
+        [HttpDelete]
+        public Response RemoveEmptyCart(string Nr_wozka)
+        {
+            {
+
+                Response response = new Response();
+
+                if (string.IsNullOrEmpty(Nr_wozka))
+                {
+                    response.Message = "Numer wózka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("sp1DeleteNumberEmptyCart", conn);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Nr_wozka", Nr_wozka);
+
+                    conn.Open();
+                    int i = command.ExecuteNonQuery();
+                    conn.Close();
+                    if (i >= 1)
+                    {
+                        response.Message = "Pomyślnie zmieniono numer wózka";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        response.Message = "Nie udało się zmienić nazwy wózka";
+                        response.Status = 0;
+                    }
+                }
+                return response;
+            }
+        }
+
     }
 }

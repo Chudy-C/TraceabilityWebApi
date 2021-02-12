@@ -12,26 +12,30 @@ namespace TraceabilityWebApi.Controllers
     [Route("api/Waga")]
     public class WagaController : ApiController
     {
-        private static SerialPort serialConnection;
+        // Methods
+        [HttpGet]
+        public string GetWage([FromBody] Waga wage)
+        {
+            WagaCommunication.Initialize("COM9", 4800);
+            wage.waga = WagaCommunication.Read();
+            WagaCommunication.Close();
+            return wage.waga;
+        }
 
         [HttpGet]
-        public IEnumerable<Waga> ReadWage()
+        public IEnumerable<Waga> GetWages()
         {
-            serialConnection = new SerialPort("COM10", 115200, Parity.None, 8, StopBits.One);
-
-            List<Waga> wagaList = new List<Waga>();
-            Waga waga = new Waga();
-
-            serialConnection.Open();
-            serialConnection.Write(new byte[] { 0x53, 0x49, 0x0D, 0x0A }, 0, 4);
-
-
-            waga.waga = serialConnection.ReadLine();
-
-            wagaList.Add(waga);
-
-            return wagaList;
+            List<Waga> list = new List<Waga>();
+            WagaCommunication.Initialize("COM9", 4800);
+            Waga item = new Waga
+            {
+                waga = WagaCommunication.Read()
+            };
+            list.Add(item);
+            WagaCommunication.Close();
+            return list;
         }
+
 
     }
 }

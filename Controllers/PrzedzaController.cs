@@ -21,6 +21,31 @@ namespace TraceabilityWebApi.Controllers
             conn = new SqlConnection(conString);
         }
 
+
+        [HttpGet]
+        public IEnumerable<Przedza> GetCoilsColor(string Nazwa_maszyny)
+        {
+            List<Przedza> list = new List<Przedza>();
+            connection();
+            SqlCommand command = new SqlCommand("spGetCoilsColor_Picker", conn);
+            command.CommandType = CommandType.StoredProcedure;
+            command.Parameters.AddWithValue("@Nazwa_maszyny", Nazwa_maszyny);
+            conn.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Przedza item = new Przedza
+                {
+                    Typ_cewki = reader["Typ_cewki"].ToString(),
+                    Kolor_cewki = reader["Kolor_cewki"].ToString()
+                };
+                list.Add(item);
+            }
+            this.conn.Close();
+
+            return list;
+        }
+
         public Response StartTrace(Przedza cart)
         {
             Response response = new Response();
@@ -28,22 +53,19 @@ namespace TraceabilityWebApi.Controllers
             {
 
                 connection();
-                SqlCommand com = new SqlCommand("spStartTrace", conn);
+                SqlCommand com = new SqlCommand("sp1PrzedzaTrace", conn);
                 com.CommandType = CommandType.StoredProcedure;
 
-                com.Parameters.AddWithValue("@ID", cart.ID);
-                com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                 com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                 com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
-                com.Parameters.AddWithValue("@Id_Maszyny", cart.ID_Maszyny_PZ);
-                com.Parameters.AddWithValue("@ID_Maszyny_PZ", cart.ID_Maszyny_PZ);
                 com.Parameters.AddWithValue("@Nm", cart.Nm);
                 com.Parameters.AddWithValue("@Material", cart.Material);
                 com.Parameters.AddWithValue("@Typ_cewki", cart.Typ_cewki);
                 com.Parameters.AddWithValue("@Kolor_cewki", cart.Kolor_cewki);
-                com.Parameters.AddWithValue("@ID_Operatora_PZ", cart.ID_Operatora_PZ);
+                //com.Parameters.AddWithValue("@ID_Operatora_PZ", cart.ID_Operatora_PZ);
                 com.Parameters.AddWithValue("@TS_PZ", System.DateTime.Now.ToString());
-                com.Parameters.AddWithValue("@Koniec_partii", cart.PartiaString);
+                com.Parameters.AddWithValue("@Koniec_partii", cart.Koniec_partii);
+                com.Parameters.AddWithValue("@Numer_partii", cart.Numer_partii);
 
 
                 conn.Open();
@@ -196,9 +218,9 @@ namespace TraceabilityWebApi.Controllers
                     connection();
                     SqlCommand com = new SqlCommand("spSendToChamber", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.Id_cart);
+                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-                    com.Parameters.AddWithValue("@Wilgotnosc", cart.Dampness);
+                    com.Parameters.AddWithValue("@Wilgotnosc", cart.Wilgotnosc_1);
 
 
                     conn.Open();
@@ -243,7 +265,7 @@ namespace TraceabilityWebApi.Controllers
                     connection();
                     SqlCommand com = new SqlCommand("spToPW", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.Id_cart);
+                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
 
@@ -285,7 +307,7 @@ namespace TraceabilityWebApi.Controllers
                     connection();
                     SqlCommand com = new SqlCommand("spBackToKom", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.Id_cart);
+                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
 
 
@@ -327,7 +349,7 @@ namespace TraceabilityWebApi.Controllers
                     connection();
                     SqlCommand com = new SqlCommand("spReturnCart", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.Id_cart);
+                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
 
                     conn.Open();
@@ -368,7 +390,7 @@ namespace TraceabilityWebApi.Controllers
                     connection();
                     SqlCommand com = new SqlCommand("spResetCart", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.Id_cart);
+                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
 
                     conn.Open();

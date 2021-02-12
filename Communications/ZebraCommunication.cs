@@ -4,11 +4,11 @@ using System.IO.Ports;
 using System.Linq;
 using System.Web;
 
-namespace TraceabilityWebApi.Models
+namespace TraceabilityWebApi.Communications
 {
-    public static class WagaCommunication
+    public static class ZebraCommunication
     {
-        // Fields
+
         private static SerialPort serialConnection;
 
         // Methods
@@ -32,5 +32,6 @@ namespace TraceabilityWebApi.Models
         {
             serialConnection.Write(data, 0, 4);
         }
+
     }
 }
