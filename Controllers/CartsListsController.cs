@@ -263,7 +263,7 @@ namespace TraceabilityWebApi.Controllers
             else
             {
                 connection();
-                SqlCommand command = new SqlCommand("spUpdateNumberEmptyCart", conn);
+                SqlCommand command = new SqlCommand("sp1UpdateNumberEmptyCart", conn);
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.AddWithValue("@Nr_wozka", przedzaCart.Nr_wozka);
@@ -310,12 +310,12 @@ namespace TraceabilityWebApi.Controllers
                 conn.Close();
                 if (i >= 1)
                 {
-                    response.Message = "Pomyślnie zmieniono numer wózka";
+                    response.Message = "Pomyślnie dodano nowy wózek";
                     response.Status = 1;
                 }
                 else
                 {
-                    response.Message = "Nie udało się zmienić nazwy wózka";
+                    response.Message = "Wózek, który próbujesz dodać jest jeszcze w trasie";
                     response.Status = 0;
                 }
             }
@@ -347,12 +347,12 @@ namespace TraceabilityWebApi.Controllers
                     conn.Close();
                     if (i >= 1)
                     {
-                        response.Message = "Pomyślnie zmieniono numer wózka";
+                        response.Message = "Pomyślnie usunięto wózek";
                         response.Status = 1;
                     }
                     else
                     {
-                        response.Message = "Nie udało się zmienić nazwy wózka";
+                        response.Message = "Nie udało się usunąć wózka";
                         response.Status = 0;
                     }
                 }

@@ -62,5 +62,6 @@ namespace TraceabilityWebApi.Models
         public string Nazwa_maszyny2 { get; set; }
         public string Numer_partii { get; set; }
         public string Numer_partii2 { get; set; }
+        public string Lokalizacja { get; set; }
     }
 }
