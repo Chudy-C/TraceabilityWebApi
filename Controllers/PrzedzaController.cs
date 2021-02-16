@@ -53,7 +53,7 @@ namespace TraceabilityWebApi.Controllers
             {
 
                 connection();
-                SqlCommand com = new SqlCommand("sp1PrzedzaTrace", conn);
+                SqlCommand com = new SqlCommand("sp1StartPrzedzaTrace", conn);
                 com.CommandType = CommandType.StoredProcedure;
 
                 com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
@@ -88,7 +88,51 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
+        [HttpPut]
+        public Response EditTrace(Przedza cart)
+        {
+            Response response = new Response();
+            try
+            {
 
+                connection();
+                SqlCommand com = new SqlCommand("sp1EditTrace", conn);
+                com.CommandType = CommandType.StoredProcedure;
+
+                com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
+                com.Parameters.AddWithValue("@Nr_wozka2", cart.Nr_wozka2);
+                com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
+                com.Parameters.AddWithValue("@Nm", cart.Nm);
+                com.Parameters.AddWithValue("@Material", cart.Material);
+                com.Parameters.AddWithValue("@Typ_cewki", cart.Typ_cewki);
+                com.Parameters.AddWithValue("@Kolor_cewki", cart.Kolor_cewki);
+                //com.Parameters.AddWithValue("@ID_Operatora_PZ", cart.ID_Operatora_PZ);
+                com.Parameters.AddWithValue("@TS_PZ", System.DateTime.Now.ToString());
+                com.Parameters.AddWithValue("@Koniec_partii", cart.Koniec_partii);
+                com.Parameters.AddWithValue("@Numer_partii", cart.Numer_partii);
+
+
+                conn.Open();
+                int i = com.ExecuteNonQuery();
+                if (i >= 1)
+                {
+                    response.Message = "Wozek dodany pomyslnie";
+                    response.Status = 1;
+                }
+                else
+                {
+                    response.Message = "Wózek nie zakończył trasy lub znajduje się już na etapie 'Przewijalnia'. Sprawdź listy wózków na danych etapach.";
+                    response.Status = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+        [HttpPut]
         public Response ToDryingFirst(Przedza cart)
         {
             Response response = new Response();
@@ -108,15 +152,59 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spToDryingFirst", conn);
+                    SqlCommand com = new SqlCommand("sp1ToDryingFirst", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID", cart.ID);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
-                    com.Parameters.AddWithValue("@ID_Maszyny", cart.ID_Suszenia_1);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
-                    com.Parameters.AddWithValue("@ID_Suszenia_1", cart.ID_Suszenia_1);
-                    com.Parameters.AddWithValue("@ID_Operatora_PZ_Susz", cart.ID_Operatora_PZ_Susz);
+                    com.Parameters.AddWithValue("@TS_SUSZ1", System.DateTime.Now.ToString());
+
+
+                    conn.Open();
+                    int i = com.ExecuteNonQuery();
+                    if (i >= 1)
+                    {
+                        response.Message = "Wozek dodany pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        response.Message = "Brak poprzedniego etapu lub znajduje się już na etapie 'Przed Suszeniem'. Sprawdź listy wózków na danych etapach.";
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+        [HttpPut]
+        public Response EditSuszarniaCart(Przedza cart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(cart.Nr_wozka))
+                {
+                    response.Message = "Numer wózka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                if (string.IsNullOrEmpty(cart.Nazwa_maszyny))
+                {
+                    response.Message = "Nazwa maszyny jest obowiązkowa";
+                    response.Status = 0;
+                }
+
+                else
+                {
+                    connection();
+                    SqlCommand com = new SqlCommand("sp1EditSuszarniaCart", conn);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
+                    com.Parameters.AddWithValue("@Nr_wozka2", cart.Nr_wozka2);
+                    com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
                     com.Parameters.AddWithValue("@TS_SUSZ1", System.DateTime.Now.ToString());
 
 
@@ -166,7 +254,7 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spToDryingAgain", conn);
+                    SqlCommand com = new SqlCommand("sp1ToDryingAgain", conn);
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                     com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);

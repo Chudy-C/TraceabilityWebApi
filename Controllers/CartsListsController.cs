@@ -221,7 +221,7 @@ namespace TraceabilityWebApi.Controllers
             return list;
         }
 
-        [HttpGet]
+/*        [HttpGet]
         public IEnumerable<Carts> GetCartInfo(string Nr_wozka)
         {
             List<Carts> cartsData = new List<Carts>();
@@ -247,7 +247,7 @@ namespace TraceabilityWebApi.Controllers
             }
             conn.Close();
             return cartsData;
-        }
+        }*/
 
         [HttpPut]
         public Response EditEmptyCart(Przedza przedzaCart)
