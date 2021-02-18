@@ -203,7 +203,6 @@ namespace TraceabilityWebApi.Controllers
                     SqlCommand com = new SqlCommand("sp1EditSuszarniaCart", conn);
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-                    com.Parameters.AddWithValue("@Nr_wozka2", cart.Nr_wozka2);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
                     com.Parameters.AddWithValue("@TS_SUSZ1", System.DateTime.Now.ToString());
 

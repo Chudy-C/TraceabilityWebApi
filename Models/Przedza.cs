@@ -63,5 +63,6 @@ namespace TraceabilityWebApi.Models
         public string Numer_partii { get; set; }
         public string Numer_partii2 { get; set; }
         public string Lokalizacja { get; set; }
+        public string WilgotnoscOstatnia { get; set; }
     }
 }

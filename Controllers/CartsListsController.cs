@@ -104,6 +104,9 @@ namespace TraceabilityWebApi.Controllers
                 cart.Nm = reader["Nm"].ToString();
                 cart.Material = reader["Material"].ToString();
                 cart.Typ_cewki = reader["Typ_cewki"].ToString();
+                cart.Wilgotnosc_1 = reader["Wilgotnosc_1"].ToString();
+                cart.Wilgotnosc_2 = reader["Wilgotnosc_2"].ToString();
+                cart.Wilgotnosc_3 = reader["Wilgotnosc_3"].ToString();
                 cart.Kolor_cewki = reader["Kolor_cewki"].ToString();
                 cart.Numer_partii = reader["Numer_partii"].ToString();
                 cart.Koniec_partii = reader["Koniec_partii"].ToString();
@@ -112,6 +115,7 @@ namespace TraceabilityWebApi.Controllers
                 cartsData.Add(cart);
             }
             conn.Close();
+
             return cartsData;
         }
         [HttpGet]
