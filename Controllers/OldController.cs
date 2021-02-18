@@ -160,89 +160,6 @@ namespace TraceabilityWebApi.Controllers
             return list;
         }
 
-        [HttpPost]
-        public Response GetEmptyStorageCart(StorageCarts storageCart)
-        {
-            Response response = new Response();
-            try
-            {
-                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
-                {
-                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
-                    response.Status = 0;
-                }
-                else
-                {
-                    connection();
-                    SqlCommand command = new SqlCommand("spGetEmptyStorageCart", this.conn)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
-                    command.Parameters.AddWithValue("@MaszynaPW", storageCart.MaszynaPW);
-                    this.conn.Open();
-                    if (command.ExecuteNonQuery() >= 1)
-                    {
-                        response.Message = "Wozek dodany pomyslnie";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        string[] textArray1 = new string[] { "Błąd 69# ", Environment.NewLine, "Nie udało się pobrać w\x00f3zka z maszyny.", Environment.NewLine, "W\x00f3zek został pobrany lub nie zakończył poprzedniej trasy." };
-                        response.Message = string.Concat(textArray1);
-                        response.Status = 0;
-                    }
-                }
-            }
-            catch (Exception exception1)
-            {
-                response.Message = exception1.Message;
-                response.Status = 0;
-            }
-            return response;
-        }
-
-        [HttpPost]
-        public Response GetFromStorage(StorageCarts storageCart)
-        {
-            Response response = new Response();
-            try
-            {
-                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
-                {
-                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
-                    response.Status = 0;
-                }
-                else
-                {
-                    connection();
-                    SqlCommand command = new SqlCommand("spGetFromStorage", this.conn)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
-                    command.Parameters.AddWithValue("@Typ_cewki", storageCart.CoilType);
-                    command.Parameters.AddWithValue("@Kolor_cewki", storageCart.CoilColor);
-                    this.conn.Open();
-                    if (command.ExecuteNonQuery() >= 1)
-                    {
-                        response.Message = "Wozek dodany pomyslnie";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        response.Message = "Błąd 67# " + Environment.NewLine + "Nie udało się pobrać w\x00f3zka z Magazynu. Został już dodany lub nie zakończył poprzedniego etapu";
-                        response.Status = 0;
-                    }
-                }
-            }
-            catch (Exception exception1)
-            {
-                response.Message = exception1.Message;
-                response.Status = 0;
-            }
-            return response;
-        }
 
         [HttpGet]
         public IEnumerable<StorageCarts> GetInStorage()
@@ -524,46 +441,7 @@ namespace TraceabilityWebApi.Controllers
             return response;
         }
 
-        [HttpPost]
-        public Response ReturnEmptyStorageCart(StorageCarts storageCart)
-        {
-            Response response = new Response();
-            try
-            {
-                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
-                {
-                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
-                    response.Status = 0;
-                }
-                else
-                {
-                    connection();
-                    SqlCommand command = new SqlCommand("spReturnStorageCart", this.conn)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
-                    this.conn.Open();
-                    if (command.ExecuteNonQuery() >= 1)
-                    {
-                        response.Message = "Aktualizacja przebiegła pomyslnie";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        string[] textArray1 = new string[] { "Błąd 66# ", Environment.NewLine, "Nie udało się zwr\x00f3cić pustego w\x00f3zka.", Environment.NewLine, "W\x00f3zek został oddany lub nie zakończył poprzedniego etapu." };
-                        response.Message = string.Concat(textArray1);
-                        response.Status = 0;
-                    }
-                }
-            }
-            catch (Exception exception1)
-            {
-                response.Message = exception1.Message;
-                response.Status = 0;
-            }
-            return response;
-        }
+
 
         public Response SendDmgLabelMail(Carts cart)
         {
@@ -606,6 +484,199 @@ namespace TraceabilityWebApi.Controllers
                 response.Status = 0;
             }
             return response;
+        }
+
+
+
+        public Response ToStorage(StorageCarts storageCart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
+                {
+                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("spSendToStorage", this.conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
+                    command.Parameters.AddWithValue("@Typ_cewki", storageCart.CoilType);
+                    command.Parameters.AddWithValue("@Kolor_cewki", storageCart.CoilColor);
+                    this.conn.Open();
+                    if (command.ExecuteNonQuery() >= 1)
+                    {
+                        response.Message = "Wozek dodany pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        string[] textArray1 = new string[] { "Błąd 68# ", Environment.NewLine, "Nie udało się dodać w\x00f3zka do Magazynu.", Environment.NewLine, "W\x00f3zek został dodany lub nie rozpoczął poprzedniego etapu." };
+                        response.Message = string.Concat(textArray1);
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception exception1)
+            {
+                response.Message = exception1.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public Response GetEmptyStorageCart(StorageCarts storageCart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
+                {
+                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("spGetEmptyStorageCart", this.conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
+                    command.Parameters.AddWithValue("@MaszynaPW", storageCart.MaszynaPW);
+                    this.conn.Open();
+                    if (command.ExecuteNonQuery() >= 1)
+                    {
+                        response.Message = "Wozek dodany pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        string[] textArray1 = new string[] { "Błąd 69# ", Environment.NewLine, "Nie udało się pobrać w\x00f3zka z maszyny.", Environment.NewLine, "W\x00f3zek został pobrany lub nie zakończył poprzedniej trasy." };
+                        response.Message = string.Concat(textArray1);
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception exception1)
+            {
+                response.Message = exception1.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public Response GetFromStorage(StorageCarts storageCart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
+                {
+                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("spGetFromStorage", this.conn)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
+                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
+                    command.Parameters.AddWithValue("@Typ_cewki", storageCart.CoilType);
+                    command.Parameters.AddWithValue("@Kolor_cewki", storageCart.CoilColor);
+                    this.conn.Open();
+                    if (command.ExecuteNonQuery() >= 1)
+                    {
+                        response.Message = "Wozek dodany pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        response.Message = "Błąd 67# " + Environment.NewLine + "Nie udało się pobrać w\x00f3zka z Magazynu. Został już dodany lub nie zakończył poprzedniego etapu";
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception exception1)
+            {
+                response.Message = exception1.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+
+        [HttpPost]
+        public Response ReturnEmptyStorageCart(StorageCarts storageCart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
+                {
+                    response.Message = "Numer wózka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("spReturnStorageCart", conn);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
+                    this.conn.Open();
+                    if (command.ExecuteNonQuery() >= 1)
+                    {
+                        response.Message = "Aktualizacja przebiegła pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        string[] textArray1 = new string[] { "Błąd 66# ", Environment.NewLine, "Nie udało się zwrócić pustego wózka.", Environment.NewLine, "Wózek został oddany lub nie zakończył poprzedniego etapu." };
+                        response.Message = string.Concat(textArray1);
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception exception1)
+            {
+                response.Message = exception1.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
+
+
+        [HttpGet]
+        public IEnumerable<StorageCarts> StorageCartValue()
+        {
+            List<StorageCarts> list = new List<StorageCarts>();
+            connection();
+            SqlCommand command = new SqlCommand("spStorageCartValues", this.conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            this.conn.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                StorageCarts item = new StorageCarts
+                {
+                    Nr_wozka = reader["Nr_wozka"].ToString(),
+                    CoilType = reader["Typ_cewki"].ToString(),
+                    CoilColor = reader["Kolor_cewki"].ToString()
+                };
+                list.Add(item);
+            }
+            this.conn.Close();
+            return list;
         }
 
         [HttpPost]
@@ -783,30 +854,6 @@ namespace TraceabilityWebApi.Controllers
             return response;
         }
 
-        [HttpGet]
-        public IEnumerable<StorageCarts> StorageCartValue()
-        {
-            List<StorageCarts> list = new List<StorageCarts>();
-            connection();
-            SqlCommand command = new SqlCommand("spStorageCartValues", this.conn)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
-            this.conn.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                StorageCarts item = new StorageCarts
-                {
-                    Nr_wozka = reader["Nr_wozka"].ToString(),
-                    CoilType = reader["Typ_cewki"].ToString(),
-                    CoilColor = reader["Kolor_cewki"].ToString()
-                };
-                list.Add(item);
-            }
-            this.conn.Close();
-            return list;
-        }
 
         [HttpPost]
         public Response ToDryingAgain(Carts cart)
@@ -914,47 +961,7 @@ namespace TraceabilityWebApi.Controllers
         }
 
         [HttpPost]
-        public Response ToStorage(StorageCarts storageCart)
-        {
-            Response response = new Response();
-            try
-            {
-                if (string.IsNullOrEmpty(storageCart.Nr_wozka))
-                {
-                    response.Message = "Numer w\x00f3zka jest obowiązkowy";
-                    response.Status = 0;
-                }
-                else
-                {
-                    connection();
-                    SqlCommand command = new SqlCommand("spSendToStorage", this.conn)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    command.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
-                    command.Parameters.AddWithValue("@Typ_cewki", storageCart.CoilType);
-                    command.Parameters.AddWithValue("@Kolor_cewki", storageCart.CoilColor);
-                    this.conn.Open();
-                    if (command.ExecuteNonQuery() >= 1)
-                    {
-                        response.Message = "Wozek dodany pomyslnie";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        string[] textArray1 = new string[] { "Błąd 68# ", Environment.NewLine, "Nie udało się dodać w\x00f3zka do Magazynu.", Environment.NewLine, "W\x00f3zek został dodany lub nie rozpoczął poprzedniego etapu." };
-                        response.Message = string.Concat(textArray1);
-                        response.Status = 0;
-                    }
-                }
-            }
-            catch (Exception exception1)
-            {
-                response.Message = exception1.Message;
-                response.Status = 0;
-            }
-            return response;
-        }
+
 
         public Response UpdatePZ(CartsPZ cart)
         {
