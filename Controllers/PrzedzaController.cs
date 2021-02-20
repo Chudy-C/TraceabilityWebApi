@@ -46,6 +46,7 @@ namespace TraceabilityWebApi.Controllers
             return list;
         }
 
+        [HttpPost]
         public Response StartTrace(Przedza cart)
         {
             Response response = new Response();
@@ -63,7 +64,6 @@ namespace TraceabilityWebApi.Controllers
                 com.Parameters.AddWithValue("@Typ_cewki", cart.Typ_cewki);
                 com.Parameters.AddWithValue("@Kolor_cewki", cart.Kolor_cewki);
                 //com.Parameters.AddWithValue("@ID_Operatora_PZ", cart.ID_Operatora_PZ);
-                com.Parameters.AddWithValue("@TS_PZ", System.DateTime.Now.ToString());
                 com.Parameters.AddWithValue("@Koniec_partii", cart.Koniec_partii);
                 com.Parameters.AddWithValue("@Numer_partii", cart.Numer_partii);
 
@@ -107,7 +107,6 @@ namespace TraceabilityWebApi.Controllers
                 com.Parameters.AddWithValue("@Typ_cewki", cart.Typ_cewki);
                 com.Parameters.AddWithValue("@Kolor_cewki", cart.Kolor_cewki);
                 //com.Parameters.AddWithValue("@ID_Operatora_PZ", cart.ID_Operatora_PZ);
-                com.Parameters.AddWithValue("@TS_PZ", System.DateTime.Now.ToString());
                 com.Parameters.AddWithValue("@Koniec_partii", cart.Koniec_partii);
                 com.Parameters.AddWithValue("@Numer_partii", cart.Numer_partii);
 
@@ -156,7 +155,6 @@ namespace TraceabilityWebApi.Controllers
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
-                    com.Parameters.AddWithValue("@TS_SUSZ1", System.DateTime.Now.ToString());
 
 
                     conn.Open();
@@ -228,7 +226,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
+        [HttpPut]
         public Response ToDryingAgain(Przedza cart)
         {
             Response response = new Response();
@@ -244,7 +242,7 @@ namespace TraceabilityWebApi.Controllers
                     response.Message = "Nazwa maszyny jest obowiązkowa";
                     response.Status = 0;
                 }
-                if (string.IsNullOrEmpty(cart.Wilgotnosc_1))
+                if (string.IsNullOrEmpty(cart.WilgotnoscOstatnia))
                 {
                     response.Message = "Wilgotność jest obowiązkowa";
                     response.Status = 0;
@@ -256,10 +254,8 @@ namespace TraceabilityWebApi.Controllers
                     SqlCommand com = new SqlCommand("sp1ToDryingAgain", conn);
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
-                    com.Parameters.AddWithValue("@ID_Maszyny", cart.ID_Suszenia_1);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
-                    com.Parameters.AddWithValue("@Wilgotnosc", cart.Wilgotnosc_1);
+                    com.Parameters.AddWithValue("@Wilgotnosc", cart.WilgotnoscOstatnia);
 
 
 
@@ -284,7 +280,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
+        [HttpPut]
         public Response SendToChamber(Przedza cart)
         {
             Response response = new Response();
@@ -303,9 +299,8 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spSendToChamber", conn);
+                    SqlCommand com = new SqlCommand("sp1SendToChamber", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                     com.Parameters.AddWithValue("@Wilgotnosc", cart.Wilgotnosc_1);
 
@@ -331,7 +326,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
+        [HttpPut]
         public Response SendToPw(Przedza cart)
         {
             Response response = new Response();
@@ -350,9 +345,8 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spToPW", conn);
+                    SqlCommand com = new SqlCommand("sp1ToPW", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
                     com.Parameters.AddWithValue("@Nazwa_maszyny", cart.Nazwa_maszyny);
 
@@ -378,7 +372,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
+        [HttpPut]
         public Response BackToKom(Przedza cart)
         {
             Response response = new Response();
@@ -392,9 +386,8 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spBackToKom", conn);
+                    SqlCommand com = new SqlCommand("sp1BackToKom", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
 
 
@@ -419,7 +412,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
+        [HttpPut]
         public Response ReturnCart(Przedza cart)
         {
             Response response = new Response();
@@ -434,9 +427,8 @@ namespace TraceabilityWebApi.Controllers
                 else
                 {
                     connection();
-                    SqlCommand com = new SqlCommand("spReturnCart", conn);
+                    SqlCommand com = new SqlCommand("sp1ReturnTraceCart", conn);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
                     com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
 
                     conn.Open();
@@ -461,45 +453,5 @@ namespace TraceabilityWebApi.Controllers
             return response;
         }
 
-        public Response ResetCart(Przedza cart)
-        {
-            Response response = new Response();
-            try
-            {
-                if (string.IsNullOrEmpty(cart.Nr_wozka))
-                {
-                    response.Message = "Numer wózka jest obowiązkowy";
-                    response.Status = 0;
-                }
-
-                else
-                {
-                    connection();
-                    SqlCommand com = new SqlCommand("spResetCart", conn);
-                    com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@ID_Wozka", cart.ID_Wozka);
-                    com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
-
-                    conn.Open();
-                    int i = com.ExecuteNonQuery();
-                    if (i >= 1)
-                    {
-                        response.Message = "Aktualizacja przebiegła pomyslnie";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        response.Message = "Błąd. Zgłoś problem do administratora.";
-                        response.Status = 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message;
-                response.Status = 0;
-            }
-            return response;
-        }
     }
 }

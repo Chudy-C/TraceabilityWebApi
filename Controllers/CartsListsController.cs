@@ -217,6 +217,7 @@ namespace TraceabilityWebApi.Controllers
                     Nr_wozka = reader["Nr_wozka"].ToString(),
                     Typ_cewki = reader["Typ_cewki"].ToString(),
                     Kolor_cewki = reader["Kolor_cewki"].ToString(),
+                    Nazwa_maszyny = reader["MaszynaPW"].ToString(),
                     TS_MAG_PZ = reader["TS_MAG_PZ"].ToString()
                 };
                 list.Add(item);
@@ -362,6 +363,47 @@ namespace TraceabilityWebApi.Controllers
                 }
                 return response;
             }
+        }
+
+        [HttpPut]
+        public Response ResetCart(Przedza cart)
+        {
+            Response response = new Response();
+            try
+            {
+                if (string.IsNullOrEmpty(cart.Nr_wozka))
+                {
+                    response.Message = "Numer wózka jest obowiązkowy";
+                    response.Status = 0;
+                }
+
+                else
+                {
+                    connection();
+                    SqlCommand com = new SqlCommand("sp1ResetCart", conn);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Nr_wozka", cart.Nr_wozka);
+
+                    conn.Open();
+                    int i = com.ExecuteNonQuery();
+                    if (i >= 1)
+                    {
+                        response.Message = "Aktualizacja przebiegła pomyslnie";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        response.Message = "Błąd. Zgłoś problem do administratora.";
+                        response.Status = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                response.Status = 0;
+            }
+            return response;
         }
 
     }
