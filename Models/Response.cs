@@ -10,8 +10,5 @@ namespace TraceabilityWebApi.Models
         public string Message { get; set; }
         public int Status { get; set; }
 
-        public int ValInt { get; set; }
-        public string ValString { get; set; }
-
     }
 }

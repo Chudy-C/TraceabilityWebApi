@@ -78,7 +78,6 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
         [HttpPut]
         public Response GetFromStorage(Przedza storageCart)
         {
@@ -130,7 +129,6 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-
         [HttpPut]
         public Response ReturnEmptyStorageCart(Przedza cart)
         {

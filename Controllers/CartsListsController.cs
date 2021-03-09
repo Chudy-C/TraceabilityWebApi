@@ -22,6 +22,44 @@ namespace TraceabilityWebApi.Controllers
             conn = new SqlConnection(conString);
         }
 
+        [HttpDelete]
+        public Response RemoveEmptyCart(string Nr_wozka)
+        {
+            {
+
+                Response response = new Response();
+
+                if (string.IsNullOrEmpty(Nr_wozka))
+                {
+                    response.Message = "Numer wózka jest obowiązkowy";
+                    response.Status = 0;
+                }
+                else
+                {
+                    connection();
+                    SqlCommand command = new SqlCommand("sp1DeleteNumberEmptyCart", conn);
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@Nr_wozka", Nr_wozka);
+
+                    conn.Open();
+                    int i = command.ExecuteNonQuery();
+                    conn.Close();
+                    if (i >= 1)
+                    {
+                        response.Message = "Pomyślnie usunięto wózek";
+                        response.Status = 1;
+                    }
+                    else
+                    {
+                        response.Message = "Nie udało się usunąć wózka";
+                        response.Status = 0;
+                    }
+                }
+                return response;
+            }
+        }
+
         [HttpGet]
         public IEnumerable<Przedza> GetPzCarts()
         {
@@ -254,7 +292,6 @@ namespace TraceabilityWebApi.Controllers
             return cartsData;
         }*/
 
-        [HttpPut]
         public Response EditEmptyCart(Przedza przedzaCart)
         {
 
@@ -291,7 +328,6 @@ namespace TraceabilityWebApi.Controllers
             return response;
         }
 
-        [HttpPost]
         public Response AddEmptyCart(Przedza przedzaCart)
         {
 
@@ -325,44 +361,6 @@ namespace TraceabilityWebApi.Controllers
                 }
             }
             return response;
-        }
-
-        [HttpDelete]
-        public Response RemoveEmptyCart(string Nr_wozka)
-        {
-            {
-
-                Response response = new Response();
-
-                if (string.IsNullOrEmpty(Nr_wozka))
-                {
-                    response.Message = "Numer wózka jest obowiązkowy";
-                    response.Status = 0;
-                }
-                else
-                {
-                    connection();
-                    SqlCommand command = new SqlCommand("sp1DeleteNumberEmptyCart", conn);
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@Nr_wozka", Nr_wozka);
-
-                    conn.Open();
-                    int i = command.ExecuteNonQuery();
-                    conn.Close();
-                    if (i >= 1)
-                    {
-                        response.Message = "Pomyślnie usunięto wózek";
-                        response.Status = 1;
-                    }
-                    else
-                    {
-                        response.Message = "Nie udało się usunąć wózka";
-                        response.Status = 0;
-                    }
-                }
-                return response;
-            }
         }
 
         [HttpPut]

@@ -22,7 +22,6 @@ namespace TraceabilityWebApi.Controllers
         }
 
 
-        [HttpGet]
         public IEnumerable<Przedza> GetCoilsColor(string Nazwa_maszyny)
         {
             List<Przedza> list = new List<Przedza>();
@@ -77,7 +76,7 @@ namespace TraceabilityWebApi.Controllers
                 }
                 else
                 {
-                    response.Message = "Wózek nie zakończył trasy lub znajduje się już na etapie 'Przewijalnia'. Sprawdź listy wózków na danych etapach.";
+                    response.Message = "Wózek nie zakończył trasy lub znajduje się już na etapie 'Przędzalnia'. Sprawdź listy wózków na danych etapach.";
                     response.Status = 0;
                 }
             }
@@ -412,7 +411,7 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
-        [HttpPut]
+
         public Response ReturnCart(Przedza cart)
         {
             Response response = new Response();

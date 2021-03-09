@@ -596,7 +596,6 @@ namespace TraceabilityWebApi.Controllers
                     else
                     {
                         response.Message = "Aktualizacja przebiegła pomyslnie";
-                        response.ValInt = num;
                         response.Status = 1;
                     }
                 }
