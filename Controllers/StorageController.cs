@@ -162,5 +162,42 @@ namespace TraceabilityWebApi.Controllers
             }
             return response;
         }
+        [HttpPut]
+        public Response EditStoragePW(Przedza storageCart)
+        {
+            Response response = new Response();
+            try
+            {
+
+                connection();
+                SqlCommand com = new SqlCommand("sp1EditStoragePW", conn);
+                com.CommandType = CommandType.StoredProcedure;
+
+                com.Parameters.AddWithValue("@Nr_wozka", storageCart.Nr_wozka);
+                com.Parameters.AddWithValue("@Nazwa_maszyny", storageCart.Nazwa_maszyny);
+                com.Parameters.AddWithValue("@Typ_cewki", storageCart.Typ_cewki);
+                com.Parameters.AddWithValue("@Kolor_cewki", storageCart.Kolor_cewki);
+
+
+                conn.Open();
+                int i = com.ExecuteNonQuery();
+                if (i >= 1)
+                {
+                    response.Message = "Wozek został zaktualizowany pomyslnie. Odśwież stronę, aby zobaczyć rezultat.";
+                    response.Status = 1;
+                }
+                else
+                {
+                    response.Message = "Wózek nie zakończył trasy lub znajduje się już na etapie 'Przewijalnia'. Sprawdź listy wózków na danych etapach.";
+                    response.Status = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                response.Status = 0;
+            }
+            return response;
+        }
     }
 }

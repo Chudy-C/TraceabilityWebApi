@@ -163,6 +163,7 @@
     <Compile Include="Communications\SerialCommunication.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CartsListsController.cs" />
+    <Compile Include="Controllers\KomoraPageController.cs" />
     <Compile Include="Controllers\MastersController.cs" />
     <Compile Include="Controllers\OldController.cs" />
     <Compile Include="Controllers\PrzedzaController.cs" />
@@ -242,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\KomoraPage\" />
     <Folder Include="Views\Old\" />
   </ItemGroup>
   <ItemGroup>
